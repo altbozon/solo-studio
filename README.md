@@ -137,6 +137,58 @@ examples/
 
 ---
 
+## What workers learn on the job — and how it stays
+
+Every chat opens cold. It has no memory of previous sessions. This would normally mean the same mistake gets made over and over.
+
+Solo Studio fixes this with a three-tier memory system. When a worker hits a gotcha, discovers a pattern, or makes a decision worth keeping, it writes a memory file before closing. The next chat that opens — for any sprint, on any discipline — loads that file and doesn't repeat the mistake.
+
+**How it works:**
+
+At the end of every worker session:
+```
+1. Worker hits a gotcha (wrong API, broken pattern, estimate was way off)
+2. Worker writes a memory file: ~/.claude/projects/<project>/memory/<topic>.md
+3. Worker adds a one-line pointer to MEMORY.md (the index)
+4. Session closes
+```
+
+The next session that opens reads MEMORY.md first. It sees the pointer, loads the file, and already knows what the previous worker learned.
+
+**The three tiers:**
+
+```
+~/.claude/projects/<project>/memory/   ← project-specific
+    MEMORY.md                          ← index, loaded every session
+    swiftdata_multicontext_bug.md      ← e.g. "writes from a fresh context
+                                           don't reach @Query — use mainContext"
+    feedback_estimates.md              ← "Apple-side work runs 50% hot"
+    sprint3_state.md                   ← what shipped, what deferred
+
+~/.claude/knowledge/                   ← cross-project (any project, same tech)
+    swift-language.md                  ← Swift concurrency patterns
+    notion-api.md                      ← Notion API quirks and limits
+
+~/.claude/methodology/                 ← cross-project (the production model itself)
+    production-pipeline.md             ← this repo
+```
+
+**The promotion rule:**
+
+A lesson starts in project memory. If the same lesson surfaces in a second project, it gets promoted to global knowledge — so any future project using the same tech gets it for free.
+
+```
+Project A worker hits a Swift concurrency bug
+    → writes to Project A memory
+        → same pattern appears in Project B
+            → promoted to ~/.claude/knowledge/swift-language.md
+                → Project C worker loads it on session open, never hits the bug
+```
+
+This is how the system compounds. You don't just get better at one project — you get better at every project that shares a technology.
+
+---
+
 ## What you get after a few sprints
 
 - A sprint history with real cost estimates vs actuals
