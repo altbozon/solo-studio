@@ -78,6 +78,18 @@ task independence and parallelisability>
    ```
    Do NOT skip worktrees. Branch contention has been a real bug.
 
+   **WORKER.md is written at worktree creation time, not at kick-off.**
+   After generating each worker prompt (see Step 2), immediately write
+   it to the worktree before moving on:
+   ```
+   cat > ../<project>-<discipline>/WORKER.md << 'EOF'
+   <prompt>
+   EOF
+   ```
+   Do not tell the user to open a worker session until WORKER.md exists
+   in that worktree. If you tell the user `Read WORKER.md and begin`
+   before writing the file, the session will fail on the first command.
+
 2. **Kick off worker chats** in dependency order. Engineering 
    skeleton first if applicable. Each worker opens Claude Code 
    in its own worktree directory.
@@ -129,15 +141,9 @@ task independence and parallelisability>
    - The Conventional Commit line must be exact — worker copies it.
    - Read the Notion task before writing the prompt. Don't guess scope.
 
-   Also write the prompt to `WORKER.md` in the worktree root so it
-   survives context resets:
-   ```
-   cat > ../<project>-<discipline>/WORKER.md << 'EOF'
-   <prompt>
-   EOF
-   ```
-   Worker can resume with: `Read WORKER.md and begin.`
-   Delete WORKER.md when the branch is merged.
+   Write the prompt to WORKER.md immediately (see Step 1 above) before
+   telling the user to open a session. Worker can resume any session
+   with: `Read WORKER.md and begin.` Delete WORKER.md on branch merge.
 
 3. **Announce shared-resource ownership at kickoff.** If multiple 
    workers will touch the same file/module/asset (design tokens, 
