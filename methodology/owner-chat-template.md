@@ -115,6 +115,18 @@ task independence and parallelisability>
    - Build/lint gates pass (e.g. `make lint`, `make build`)
    - For Apple projects: `make lint-pbxproj` + `make build-<target>`
 
+   Before merging, re-rebase the branch onto current `main`:
+   ```
+   cd ../<project>-<discipline>
+   git rebase main
+   cd -
+   ```
+   Workers rebase before submitting, but by the time you merge, other
+   workers may have already landed. Their pre-submit rebase is now
+   stale. One extra rebase here surfaces conflicts in the right
+   context — before they tangle into the merge. (Two consecutive
+   sprints hit this; it's a stable pattern.)
+
    Merge command:
    ```
    git checkout main

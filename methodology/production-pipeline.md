@@ -107,6 +107,11 @@ A feature task is **Done** when:
 3. **Notion task marked Done with Actual Cost filled in (days)** — mandatory, not optional
 4. No regressions in existing test suite
 
+**Settings-toggle addendum.** When a feature task adds a user-visible Settings toggle:
+1. The runtime call site that reads the toggle is in scope — not just the UI and persistence layer.
+2. At least one test must flip the toggle and assert a behaviour change. That test belongs at the runtime layer (coordinator / model), not inside the Settings view's own test file — testing inside the view re-verifies persistence, not behaviour.
+3. Merge-gate question for any toggle-touching branch: "can you point me at the test that fails when this toggle is removed?" If no such test exists, the toggle is silent and the branch is not Done. *(On trial from Sprint 9 — one direct data point; revisit after Sprint 10.)*
+
 **Feature chat closing rule:** before ending any Feature session, the chat MUST update Notion. If a previous session forgot, do it at the start of the next one before touching code.
 
 A sprint is **Done** when all its feature tasks are Done, `VERSION` is bumped (`MINOR` per sprint milestone), and a git tag is applied (`v0.X.0`).
