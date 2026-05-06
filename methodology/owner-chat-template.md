@@ -82,6 +82,15 @@ task independence and parallelisability>
    skeleton first if applicable. Each worker opens Claude Code 
    in its own worktree directory.
 
+   **When it's time to kick off a worker, generate the full worker 
+   prompt as your output — write it into the chat, ready to 
+   copy-paste.** Do not ask the user to find a prompt elsewhere 
+   or scroll back through this document. The prompt you generate 
+   must be self-contained: worktree path, branch name, hard 
+   constraints block, Notion task URL, scope, Definition of Done, 
+   and what to report back when done. Tailor it to what you 
+   actually read in Notion — don't template-fill blindly.
+
 3. **Announce shared-resource ownership at kickoff.** If multiple 
    workers will touch the same file/module/asset (design tokens, 
    protocol definitions, schema files, pbxproj entries), name 
