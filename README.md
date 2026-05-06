@@ -59,6 +59,24 @@ The result: focused context per session, clean git history, and a production sys
 
 ---
 
+## What this builds on
+
+Solo Studio is a hybrid of established practices, applied to a one-person Claude Code workflow. If you already know any of these, you'll recognise the pattern.
+
+| Practice | What Solo Studio takes from it |
+|---|---|
+| **Agile / Scrum** | Sprint cadence, backlog, Definition of Done, retrospectives. Sprints are fixed scope (not fixed time) — they close when all tasks are Done, not on a calendar date. |
+| **BDD** (Behaviour-Driven Development) | Tests are written as human-readable scenarios before code. Worker chats write `.feature` files (pytest-bdd) or equivalent platform tests as part of the Definition of Done — not after. |
+| **Kanban** | Task states flow Backlog → In Progress → Done in Notion. No task moves forward without the previous gate passing. |
+| **Trunk-based development** | Short-lived discipline branches (`sprint<N>/<discipline>`), merged to `main` with `--no-ff` as soon as they're Done. No long-lived feature branches. |
+| **Conventional Commits** | Every commit is prefixed (`feat:` / `fix:` / `chore:` / `test:` / `refactor:`). Enforced in every worker's Definition of Done. Makes git history machine-readable and sprint history auditable. |
+| **Discipline-based studio production** | Role separation between EP, Owner, and Workers. No role crosses into another's lane. The EP never writes code; workers never make strategic decisions. |
+| **Context engineering** | Each chat role is scoped to minimise token cost and maximise focus. Notion + memory files replace chat-to-chat communication. Chats open cold and read state — they don't carry it. |
+
+**What's new:** the combination. Scrum gives you the sprint model. BDD gives you the test discipline. Studio production gives you the role structure. Context engineering makes it work with LLMs. Solo Studio wires them together into a single workflow one person can run alone.
+
+---
+
 ## What keeps it honest
 
 **Definition of Done** — a task is not done until: tests written and passing, committed with a conventional commit, Notion task marked Done with actual cost filled in. All three, every time.
