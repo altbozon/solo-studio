@@ -1,0 +1,51 @@
+# [Your Project Name] — CLAUDE.md
+
+## Production methodology
+See `~/.claude/methodology/production-pipeline.md`. This project runs under Solo Studio.
+- EP chat: cross-sprint, defines scope, never writes code
+- Owner chat: one per sprint, coordinates workers, merges branches
+- Worker chats: EP-authorised only, each in its own git worktree
+
+## Project identity
+- **App name:** [Name]
+- **Bundle ID / package:** [com.example.app]
+- **Repo root:** [path] — note if git root differs from cwd
+
+## Repo layout
+```
+[your repo structure here]
+```
+
+## Hard constraints
+<!-- Project-wide rules that ALL chats must respect. These go in every prompt. -->
+- [e.g. "Do not enrol in paid service X until Sprint N is explicitly authorised"]
+- [e.g. "macOS target stays in sync with iOS on every feature"]
+
+## Notion
+- **Production HQ:** [URL]
+- **Project row:** [URL]
+- **Tasks DB:** [collection URL]
+
+## Disciplines active on this project
+<!-- Prune the list — don't invent new ones -->
+Engineering · ML / Data · Design · UI / Frontend · Product · QA · Analytics
+
+## Task naming convention
+- Parent feature task: `<Feature name>` (Discipline = Product)
+- Discipline sub-task: `<Feature name> — <Discipline>: <one-line scope>`
+
+## Build gate
+```bash
+# The command Owner uses to verify a branch before merging
+[your build/test command]
+```
+
+## Versioning
+- `VERSION` file at repo root
+- `PATCH` = bug fix · `MINOR` = sprint milestone · `MAJOR` = breaking change
+- Tag pattern: `v0.<sprint>.0`
+
+## Key gotchas
+<!-- Hard-won facts that every chat needs on session open -->
+- [gotcha 1]
+- [gotcha 2]
