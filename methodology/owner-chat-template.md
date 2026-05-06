@@ -91,6 +91,17 @@ task independence and parallelisability>
    and what to report back when done. Tailor it to what you 
    actually read in Notion — don't template-fill blindly.
 
+   Also write the same prompt to `WORKER.md` in the worktree root:
+   ```
+   cat > ../<project>-<discipline>/WORKER.md << 'EOF'
+   <the prompt you just generated>
+   EOF
+   ```
+   This means if you need to re-kick a worker later (wave 2, 
+   handoff, context limit), the prompt is already on disk. The 
+   worker session can start with: `Read WORKER.md and begin.`
+   Delete WORKER.md when the discipline branch is merged.
+
 3. **Announce shared-resource ownership at kickoff.** If multiple 
    workers will touch the same file/module/asset (design tokens, 
    protocol definitions, schema files, pbxproj entries), name 
