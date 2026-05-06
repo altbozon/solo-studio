@@ -81,25 +81,13 @@ task independence and parallelisability>
    ```
    Do NOT skip worktrees. Branch contention has been a real bug.
 
-   **WORKER.md is written at worktree creation time, not at kick-off.**
-   After generating each worker prompt (see Step 2), immediately write
-   it to the worktree before moving on:
-   ```
-   cat > ../<project>-<discipline>/WORKER.md << 'EOF'
-   <prompt>
-   EOF
-   ```
-   Do not tell the user to open a worker session until WORKER.md exists
-   in that worktree. If you tell the user `Read WORKER.md and begin`
-   before writing the file, the session will fail on the first command.
-
 2. **Kick off worker chats** in dependency order. Engineering 
    skeleton first if applicable. Each worker opens Claude Code 
    in its own worktree directory.
 
    **When it's time to kick off a worker, generate the prompt as
-   your output — short, scannable, ready to paste.** Use this
-   exact format — no walls of text, no methodology lectures:
+   your output — short, scannable, ready to copy-paste into a new
+   session.** Use this exact format:
 
    ```
    Feature chat: Sprint <N> — <Discipline> — <task name>
@@ -108,7 +96,7 @@ task independence and parallelisability>
    <URL>
    (<one-line scope summary> — <est>d est)
 
-   PREREQ: <what must be done first, or omit section if none>
+   PREREQ: <what must be done first, or omit if none>
 
    Branch: sprint<N>/<discipline>
    (confirm with `git branch` before touching anything)
@@ -120,10 +108,8 @@ task independence and parallelisability>
    Scope:
    1. <concrete deliverable>
    2. <concrete deliverable>
-   ...
 
    Do NOT:
-   - <explicit out-of-scope guard>
    - <explicit out-of-scope guard>
 
    DoD:
@@ -133,20 +119,12 @@ task independence and parallelisability>
    - Notion task marked Done with Actual Cost filled in
    ```
 
-   Rules for generating prompts:
-   - One task per prompt. If a worker owns multiple sequential tasks,
-     generate one prompt per task and kick them off in order as each
-     lands — do not bundle tasks into one prompt.
-   - No "rules" section, no autonomy lectures, no "report back to
-     Owner" instructions. The format itself is the contract.
-   - Scope items are numbered, concrete, and short — one line each.
-   - Do NOT items call out the most likely over-reach for that task.
-   - The Conventional Commit line must be exact — worker copies it.
+   Rules:
+   - One task per prompt. Multiple sequential tasks get separate prompts
+     kicked off in order as each lands.
    - Read the Notion task before writing the prompt. Don't guess scope.
-
-   Write the prompt to WORKER.md immediately (see Step 1 above) before
-   telling the user to open a session. Worker can resume any session
-   with: `Read WORKER.md and begin.` Delete WORKER.md on branch merge.
+   - The Conventional Commit line must be exact — worker copies it.
+   - No lectures, no "report back" instructions. The format is the contract.
 
 3. **Announce shared-resource ownership at kickoff.** If multiple 
    workers will touch the same file/module/asset (design tokens, 
