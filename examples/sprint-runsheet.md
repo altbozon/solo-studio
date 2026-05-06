@@ -73,6 +73,7 @@ Worker pattern: [Feature chat per task | Worker per discipline | Sequential sing
 - [ ] VERSION bumped: `cat VERSION`
 - [ ] Retro note in Notion parent task
 - [ ] Bank surprises to memory
+- [ ] Review any **Methodology candidate:** lines from worker closing reports → update `~/.claude/methodology/` if warranted
 - [ ] Update sprint table in Production HQ
 
 ---

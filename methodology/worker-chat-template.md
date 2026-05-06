@@ -59,6 +59,10 @@ When all tasks are Done and Notion is updated, report back to the Owner chat:
 - Anything that surprised you (worth banking as a memory entry)
 - Any scope that expanded or was intentionally skipped
 - Whether the build gate passed clean
+- **Methodology candidate:** [optional] if you hit a process problem — not a tech gotcha,
+  but something wrong with *how we work* (a rule that caused friction, a step that was
+  missing, a pattern that should be in the templates) — flag it here with one line.
+  The EP decides whether it becomes a methodology update. If nothing: omit the line.
 ```
 
 ---

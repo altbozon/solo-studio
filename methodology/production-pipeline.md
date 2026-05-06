@@ -150,6 +150,8 @@ When a Worker / Feature / EP chat captures a learning, the closing-out step incl
 - "Is this only meaningful for *this* project?" → write to project memory.
 - "I'm not sure" → default to project memory. Future EP audits can promote later. Don't over-globalise prematurely.
 
+**Methodology candidate flag:** workers may also flag process-level observations — not tech gotchas, but friction in the workflow itself (a rule that caused confusion, a missing step, a template gap). These go in the closing report to Owner as a `Methodology candidate:` line. The EP reviews them at sprint close and decides whether to update `~/.claude/methodology/`. Workers do not touch methodology files directly.
+
 When promoting an existing project memory:
 1. Copy the general pattern to the relevant global knowledge file.
 2. Trim the project memory to a short pointer + project-specific origin context (e.g. "Caught in Sprint 6 ClipRecorder.swift — see `~/.claude/knowledge/swift-language.md` for the general pattern").
