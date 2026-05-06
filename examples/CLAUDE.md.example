@@ -7,45 +7,59 @@ See `~/.claude/methodology/production-pipeline.md`. This project runs under Solo
 - Worker chats: EP-authorised only, each in its own git worktree
 
 ## Project identity
-- **App name:** [Name]
-- **Bundle ID / package:** [com.example.app]
-- **Repo root:** [path] — note if git root differs from cwd
+- **App / product name:** [Name]
+- **Type:** [iOS app / Android app / web app / CLI tool / backend service / cross-platform / etc.]
+- **Package / bundle ID:** [com.example.app or N/A]
+- **Repo root:** [path — note if git root differs from working directory]
+
+## Platform
+- **Primary:** [iOS 18+ / Android 14+ / Web / Windows 11 / macOS 15+ / etc.]
+- **Secondary:** [if multi-platform — list all targets]
+- **Build gate:**
+  ```bash
+  [the command Owner uses to verify a branch before merging]
+  # iOS example:    xcodebuild -scheme App -destination 'platform=iOS Simulator,name=iPhone 16' build
+  # Android example: ./gradlew assembleDebug test
+  # Web example:     npm run build && npm test
+  # Python example:  make test
+  ```
 
 ## Repo layout
 ```
-[your repo structure here]
+[your repo structure — enough for a cold-start chat to navigate]
 ```
 
 ## Hard constraints
-<!-- Project-wide rules that ALL chats must respect. These go in every prompt. -->
-- [e.g. "Do not enrol in paid service X until Sprint N is explicitly authorised"]
-- [e.g. "macOS target stays in sync with iOS on every feature"]
+<!-- Project-wide rules ALL chats must respect. Repeat in every prompt. -->
+- [e.g. "Do not sign up for paid service X until Sprint N is explicitly authorised"]
+- [e.g. "Secondary platform stays in sync with primary on every feature"]
+- [e.g. "No PII stored on-device — all user data stays on user's account"]
 
 ## Notion
 - **Production HQ:** [URL]
 - **Project row:** [URL]
-- **Tasks DB:** [collection URL]
+- **Tasks DB:** [URL]
 
 ## Disciplines active on this project
-<!-- Prune the list — don't invent new ones -->
-Engineering · ML / Data · Design · UI / Frontend · Product · QA · Analytics
+<!-- Prune — don't invent new ones -->
+Engineering · ML / Data · Design · UI / Frontend · Platform · QA · Analytics · Product
 
 ## Task naming convention
 - Parent feature task: `<Feature name>` (Discipline = Product)
 - Discipline sub-task: `<Feature name> — <Discipline>: <one-line scope>`
 
-## Build gate
-```bash
-# The command Owner uses to verify a branch before merging
-[your build/test command]
-```
-
 ## Versioning
-- `VERSION` file at repo root
+- `VERSION` file at repo root: `MAJOR.MINOR.PATCH`
 - `PATCH` = bug fix · `MINOR` = sprint milestone · `MAJOR` = breaking change
 - Tag pattern: `v0.<sprint>.0`
+- [Add project-specific version bump command if applicable]
+
+## VCS / infrastructure
+- **Git remote:** [URL]
+- **CI:** [GitHub Actions / none / etc.]
+- **Deploy / distribution:** [App Store / Google Play / Vercel / self-hosted / etc.]
 
 ## Key gotchas
-<!-- Hard-won facts that every chat needs on session open -->
+<!-- Hard-won facts every chat needs on session open. Grows over sprints. -->
 - [gotcha 1]
 - [gotcha 2]

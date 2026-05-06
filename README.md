@@ -16,33 +16,46 @@ The result: focused context per session, clean git history, and a production sys
 
 ---
 
-## How it works
+## The full lifecycle
 
 ```
-              YOU
-           (EP seat)
-               │
-       ┌───────┴───────┐
-       │   EP chat     │  ← defines scope, never writes code
-       └───────┬───────┘
-               │
-       ┌───────┴───────┐
-       │  Owner chat   │  ← coordinates workers, merges branches
-       └───┬───┬───┬───┘
-           │   │   │
-        [Eng] [ML] [UI]   ← each in its own git worktree
-           │   │   │
-           └───┴───┘
-               │
-           NOTION
-       (shared state)
+    YOUR IDEA
+        │
+        ▼
+  ┌─────────────┐
+  │  Sprint 0   │  Inception — Competitive analysis → Leads meeting
+  │  (no code)  │  → Product brief → Platform decision → Roadmap
+  └──────┬──────┘
+         │
+         ▼
+  ┌─────────────┐
+  │   EP chat   │  Reads Notion + memory → proposes sprint scope
+  │             │  → produces Owner prompt → never writes code
+  └──────┬──────┘
+         │
+         ▼
+  ┌─────────────┐
+  │ Owner chat  │  Sets up worktrees → kicks off workers
+  │             │  → merges branches → closes sprint
+  └──┬───┬───┬──┘
+     │   │   │
+  [Eng] [ML] [UI]  Each in its own git worktree
+     │   │   │     Each owns one Notion task end-to-end
+     └───┴───┘
+         │
+       NOTION
+   (shared state)
 ```
 
-**EP chat** — One per sprint kickoff. Reads Notion, proposes scope, produces the Owner prompt. Never touches code.
+## Chat roles
 
-**Owner chat** — One per sprint. Sets up worktrees, kicks off workers in dependency order, merges as branches land, closes the sprint.
+**Discovery chat** (Sprint 0 only) — plays each discipline in sequence to pressure-test your idea. Produces the product brief. See `methodology/inception-phase.md`.
 
-**Worker chats** — One per discipline (Engineering, ML/Data, Design, UI/Frontend, QA). Each works in its own `git worktree`. Owns one Notion task end-to-end. Marks it Done with actual cost before moving on.
+**EP chat** — one per sprint kickoff. Reads Notion + project memory, proposes scope, produces the Owner prompt. Never touches code.
+
+**Owner chat** — one per sprint. Sets up worktrees, kicks off workers in dependency order, merges as branches land, closes the sprint. Never writes code.
+
+**Worker chats** — one per discipline. Each works in its own `git worktree`. Owns one Notion task end-to-end. Marks it Done with actual cost before moving on.
 
 ---
 
@@ -92,7 +105,24 @@ See `~/.claude/methodology/production-pipeline.md`.
 
 Also add your project's Notion links, bundle IDs, build gate, and any hard constraints.
 
-### 5. Run your first EP session
+### 5. Run Sprint 0 — Inception
+
+Before Sprint 1, run the inception phase:
+
+```
+a. Competitive analysis — paste methodology/competitive-analysis-template.md
+   into a new Claude Code session. Output: competitive brief.
+
+b. Leads meeting — paste the Discovery chat prompt from
+   methodology/inception-phase.md with your idea + competitive brief.
+   Output: product brief (problem, killer flow, platform decision,
+   feature tiers, Sprint 1 recommendation).
+
+c. Sprint 0 close — set up Notion, write CLAUDE.md, create memory/,
+   write VERSION=0.0.0. Checklist in methodology/inception-phase.md.
+```
+
+### 6. Run your first EP session
 
 Open Claude Code in your project directory and paste the EP kickoff prompt from `methodology/ep-chat-template.md`, filled with your project's values.
 
@@ -106,33 +136,34 @@ Then: `kick off: Sprint 1`
 
 ```
 methodology/
-    production-pipeline.md    full reference: roles, Notion schema,
-                              Definition of Done, memory tiers,
-                              worktree rules, anti-patterns
+    inception-phase.md            Sprint 0: competitive analysis →
+                                  leads meeting → product brief →
+                                  platform decision → Sprint 0 close
 
-    ep-role.md                EP posture and practice — what to do,
-                              what not to do, how a session opens
-                              and closes
+    competitive-analysis-         ready-to-paste prompt for mapping
+    template.md                   the market and finding gaps before
+                                  the leads meeting
 
-    ep-chat-template.md       ready-to-paste EP kickoff prompt
-                              with project fill-in guide
+    production-pipeline.md        full reference: roles, Notion schema,
+                                  Definition of Done, memory tiers,
+                                  worktree rules, anti-patterns
 
-    owner-chat-template.md    Owner prompt with hard constraints
-                              section, scope block format, worker
-                              pattern decision guide, notes for EP
+    ep-role.md                    EP posture and practice
 
-    worker-chat-template.md   Worker prompt skeleton — Owner fills
-                              in discipline, tasks, build gate
+    ep-chat-template.md           ready-to-paste EP kickoff prompt
+
+    owner-chat-template.md        Owner prompt with fill-in guide
+
+    worker-chat-template.md       Worker prompt skeleton
 
 examples/
-    CLAUDE.md.example         what a well-formed project CLAUDE.md
-                              looks like under this methodology
+    CLAUDE.md.example             platform-agnostic project CLAUDE.md
+                                  template
 
-    project-memory-structure  what the project memory directory
-                              looks like after a few sprints
+    project-memory-structure.md   what the memory directory looks like
+                                  after a few sprints
 
-    sprint-runsheet.md        the EP's personal sprint checklist —
-                              copy per sprint, tick through
+    sprint-runsheet.md            EP personal sprint checklist
 ```
 
 ---
@@ -201,13 +232,38 @@ The compounding is the point. Each sprint makes the next one cheaper.
 
 ---
 
-## What disciplines look like
+## Disciplines
 
-Default seven. Projects can prune but shouldn't invent new ones — the schema is shared across projects so cross-project rollups stay clean.
+Default eight. Projects prune to what's needed — don't invent new ones, the schema is shared across projects so rollups stay clean.
 
-`Engineering` · `ML / Data` · `Design` · `UI / Frontend` · `Product` · `QA` · `Analytics`
+`Engineering` · `ML / Data` · `Design` · `UI / Frontend` · `Platform` · `QA` · `Analytics` · `Product`
+
+| Discipline | Owns |
+|---|---|
+| Engineering | Core logic, APIs, data layer, backend |
+| ML / Data | Models, inference, training, data pipelines |
+| Design | UX flows, visual design, brand, assets |
+| UI / Frontend | Platform UI code, component implementation |
+| Platform | Platform-specific integration: entitlements, permissions, store assets, signing, device matrix. Add this discipline when shipping on 3+ platforms or when platform work is substantial. |
+| QA | Test strategy, regression, device/browser matrix |
+| Analytics | Telemetry, funnels, instrumentation, metrics |
+| Product | Roadmap, competitive position, feature prioritisation |
 
 Each task has exactly one discipline. Each worker chat owns one discipline per sprint.
+
+## Platforms
+
+The methodology is platform-agnostic. The build gate, stack, and worktree paths are project fill-ins — not assumptions.
+
+| Platform | Typical stack | Build gate example |
+|---|---|---|
+| iOS | Swift / SwiftUI | `xcodebuild -scheme App -destination 'platform=iOS Simulator' build` |
+| Android | Kotlin / Jetpack Compose | `./gradlew assembleDebug` |
+| macOS | Swift / SwiftUI | `xcodebuild -scheme App -destination 'platform=macOS' build` |
+| Windows | .NET / WinUI, Electron | `dotnet build` or `npm run build` |
+| Web | React / Vue / Svelte | `npm run build && npm test` |
+| Cross-platform | Flutter, React Native, Tauri | platform-specific CI commands |
+| Backend / CLI | Python, Go, Rust, Node | `make test` or `cargo test` |
 
 ---
 
@@ -216,6 +272,56 @@ Each task has exactly one discipline. Each worker chat owns one discipline per s
 The methodology layer (`~/.claude/methodology/`) is project-agnostic. Project-specific values — Notion links, build gates, hard constraints, bundle IDs — live in project memory (`~/.claude/projects/<project>/memory/`).
 
 When something works on one project and would help any project using the same tech, promote it to global knowledge (`~/.claude/knowledge/`). That's how the system compounds across projects, not just within them.
+
+---
+
+## Keeping methodology and knowledge in sync across machines
+
+The methodology files live in `~/.claude/methodology/` and the global knowledge in `~/.claude/knowledge/`. By default these are local to one machine.
+
+If you work across multiple machines, you want these to follow you. Two options:
+
+### Option A — Git repo (recommended)
+
+Keep `~/.claude/methodology/` and `~/.claude/knowledge/` as a private git repo. On each machine, clone it and symlink:
+
+```bash
+# On machine 1 — turn the dirs into a repo
+cd ~/.claude
+git init claude-brain
+mv methodology claude-brain/
+mv knowledge claude-brain/
+cd claude-brain && git add . && git commit -m "init"
+gh repo create claude-brain --private --source=. --push
+
+# Create symlinks so Claude Code finds them at the expected paths
+ln -s ~/.claude/claude-brain/methodology ~/.claude/methodology
+ln -s ~/.claude/claude-brain/knowledge ~/.claude/knowledge
+```
+
+```bash
+# On machine 2 — clone and symlink
+cd ~/.claude
+git clone https://github.com/<you>/claude-brain
+ln -s ~/.claude/claude-brain/methodology ~/.claude/methodology
+ln -s ~/.claude/claude-brain/knowledge ~/.claude/knowledge
+```
+
+Push from wherever you update. Pull before starting a session on another machine.
+
+### Option B — Cloud sync (simpler, less control)
+
+Sync `~/.claude/methodology/` and `~/.claude/knowledge/` with iCloud Drive, Dropbox, or any folder-sync service. Create symlinks from `~/.claude/` to the synced location.
+
+```bash
+# macOS iCloud example
+mv ~/.claude/methodology ~/Library/Mobile\ Documents/com~apple~CloudDocs/claude/methodology
+ln -s ~/Library/Mobile\ Documents/com~apple~CloudDocs/claude/methodology ~/.claude/methodology
+```
+
+### What doesn't need syncing
+
+Project memory (`~/.claude/projects/<project>/memory/`) is project-specific. Keep it with the project — either in the repo itself (add a `memory/` dir and commit it) or accept that it's machine-local. Project memory is most useful on the machine where you actively develop that project.
 
 ---
 
