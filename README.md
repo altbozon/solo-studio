@@ -156,6 +156,14 @@ methodology/
 
     worker-chat-template.md       Worker prompt skeleton
 
+    context-handoff.md            Protocol for handing off a session
+                                  when context limit is reached
+                                  mid-task — lossless, commit-anchored
+
+    debug-agent-template.md       Specialist debugger chat — investigates,
+                                  diagnoses, proposes fix, never applies
+                                  it without approval
+
 examples/
     CLAUDE.md.example             platform-agnostic project CLAUDE.md
                                   template
@@ -277,41 +285,44 @@ When something works on one project and would help any project using the same te
 
 ## Keeping methodology and knowledge in sync across machines
 
-The methodology files live in `~/.claude/methodology/` and the global knowledge in `~/.claude/knowledge/`. By default these are local to one machine.
+The methodology files (`~/.claude/methodology/`) and global knowledge (`~/.claude/knowledge/`) are local by default. If you work across multiple machines, keep them in a private "memory umbrella" repo with symlinks.
 
-If you work across multiple machines, you want these to follow you. Two options:
-
-### Option A — Git repo (recommended)
-
-Keep `~/.claude/methodology/` and `~/.claude/knowledge/` as a private git repo. On each machine, clone it and symlink:
+### Setup — the umbrella pattern
 
 ```bash
-# On machine 1 — turn the dirs into a repo
-cd ~/.claude
-git init claude-brain
-mv methodology claude-brain/
-mv knowledge claude-brain/
-cd claude-brain && git add . && git commit -m "init"
-gh repo create claude-brain --private --source=. --push
+# Machine 1 — create the umbrella repo
+mkdir -p ~/.claude/memory-umbrella
+mv ~/.claude/methodology ~/.claude/memory-umbrella/methodology
+mv ~/.claude/knowledge   ~/.claude/memory-umbrella/knowledge
 
-# Create symlinks so Claude Code finds them at the expected paths
-ln -s ~/.claude/claude-brain/methodology ~/.claude/methodology
-ln -s ~/.claude/claude-brain/knowledge ~/.claude/knowledge
+cd ~/.claude/memory-umbrella
+git init && git add . && git commit -m "init"
+gh repo create claude-memory --private --source=. --push
+
+# Symlink back so Claude Code finds them at expected paths
+ln -s ~/.claude/memory-umbrella/methodology ~/.claude/methodology
+ln -s ~/.claude/memory-umbrella/knowledge   ~/.claude/knowledge
 ```
 
 ```bash
-# On machine 2 — clone and symlink
+# Machine 2 (and any subsequent machine) — clone and symlink
 cd ~/.claude
-git clone https://github.com/<you>/claude-brain
-ln -s ~/.claude/claude-brain/methodology ~/.claude/methodology
-ln -s ~/.claude/claude-brain/knowledge ~/.claude/knowledge
+git clone https://github.com/<you>/claude-memory memory-umbrella
+ln -s ~/.claude/memory-umbrella/methodology ~/.claude/methodology
+ln -s ~/.claude/memory-umbrella/knowledge   ~/.claude/knowledge
 ```
 
 Push from wherever you update. Pull before starting a session on another machine.
 
-### Option B — Cloud sync (simpler, less control)
+### What to put in the umbrella
 
-Sync `~/.claude/methodology/` and `~/.claude/knowledge/` with iCloud Drive, Dropbox, or any folder-sync service. Create symlinks from `~/.claude/` to the synced location.
+| Directory | Sync? | Why |
+|---|---|---|
+| `~/.claude/methodology/` | Yes | Methodology is machine-agnostic |
+| `~/.claude/knowledge/` | Yes | Cross-project lessons are machine-agnostic |
+| `~/.claude/projects/<project>/memory/` | Optional | Project memory is most useful where you develop that project. Add it to the umbrella if you work on the same project across machines. |
+
+### Cloud sync alternative (simpler)
 
 ```bash
 # macOS iCloud example
@@ -319,9 +330,7 @@ mv ~/.claude/methodology ~/Library/Mobile\ Documents/com~apple~CloudDocs/claude/
 ln -s ~/Library/Mobile\ Documents/com~apple~CloudDocs/claude/methodology ~/.claude/methodology
 ```
 
-### What doesn't need syncing
-
-Project memory (`~/.claude/projects/<project>/memory/`) is project-specific. Keep it with the project — either in the repo itself (add a `memory/` dir and commit it) or accept that it's machine-local. Project memory is most useful on the machine where you actively develop that project.
+Same approach works with Dropbox or any folder-sync service.
 
 ---
 
