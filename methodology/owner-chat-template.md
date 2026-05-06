@@ -82,25 +82,62 @@ task independence and parallelisability>
    skeleton first if applicable. Each worker opens Claude Code 
    in its own worktree directory.
 
-   **When it's time to kick off a worker, generate the full worker 
-   prompt as your output — write it into the chat, ready to 
-   copy-paste.** Do not ask the user to find a prompt elsewhere 
-   or scroll back through this document. The prompt you generate 
-   must be self-contained: worktree path, branch name, hard 
-   constraints block, Notion task URL, scope, Definition of Done, 
-   and what to report back when done. Tailor it to what you 
-   actually read in Notion — don't template-fill blindly.
+   **When it's time to kick off a worker, generate the prompt as
+   your output — short, scannable, ready to paste.** Use this
+   exact format — no walls of text, no methodology lectures:
 
-   Also write the same prompt to `WORKER.md` in the worktree root:
+   ```
+   Feature chat: Sprint <N> — <Discipline> — <task name>
+
+   You own this Notion task:
+   <URL>
+   (<one-line scope summary> — <est>d est)
+
+   PREREQ: <what must be done first, or omit section if none>
+
+   Branch: sprint<N>/<discipline>
+   (confirm with `git branch` before touching anything)
+
+   Read before starting:
+   - <project>/CLAUDE.md
+   - <any specific memory files relevant to this task>
+
+   Scope:
+   1. <concrete deliverable>
+   2. <concrete deliverable>
+   ...
+
+   Do NOT:
+   - <explicit out-of-scope guard>
+   - <explicit out-of-scope guard>
+
+   DoD:
+   - <verifiable completion criterion>
+   - Both targets build clean (if Apple project — list exact commands)
+   - Conventional Commit: <prefix(scope): message>
+   - Notion task marked Done with Actual Cost filled in
+   ```
+
+   Rules for generating prompts:
+   - One task per prompt. If a worker owns multiple sequential tasks,
+     generate one prompt per task and kick them off in order as each
+     lands — do not bundle tasks into one prompt.
+   - No "rules" section, no autonomy lectures, no "report back to
+     Owner" instructions. The format itself is the contract.
+   - Scope items are numbered, concrete, and short — one line each.
+   - Do NOT items call out the most likely over-reach for that task.
+   - The Conventional Commit line must be exact — worker copies it.
+   - Read the Notion task before writing the prompt. Don't guess scope.
+
+   Also write the prompt to `WORKER.md` in the worktree root so it
+   survives context resets:
    ```
    cat > ../<project>-<discipline>/WORKER.md << 'EOF'
-   <the prompt you just generated>
+   <prompt>
    EOF
    ```
-   This means if you need to re-kick a worker later (wave 2, 
-   handoff, context limit), the prompt is already on disk. The 
-   worker session can start with: `Read WORKER.md and begin.`
-   Delete WORKER.md when the discipline branch is merged.
+   Worker can resume with: `Read WORKER.md and begin.`
+   Delete WORKER.md when the branch is merged.
 
 3. **Announce shared-resource ownership at kickoff.** If multiple 
    workers will touch the same file/module/asset (design tokens, 
@@ -126,6 +163,20 @@ task independence and parallelisability>
    stale. One extra rebase here surfaces conflicts in the right
    context — before they tangle into the merge. (Two consecutive
    sprints hit this; it's a stable pattern.)
+
+   After rebasing, always run this diff check before merging:
+   ```
+   git diff main..sprint<N>/<discipline> --stat
+   ```
+   Any unexpected deletions = sibling work that merged after this branch
+   was created. If you see them, rebase again and re-check before proceeding.
+
+   **Settings-toggle → coordinator cross-reference.** When the sprint includes
+   UserDefaults toggles that affect runtime behaviour (not just UI state), the
+   Engineering scope brief must include a table listing each key and the
+   component that must read it. Without this, toggles get wired in the UI and
+   silently ignored by the engine. (Caught Sprint 9: `alertOnUnknownFaces`
+   stored in UserDefaults by SwiftUI, never read by FaceRecognitionCoordinator.)
 
    Merge command:
    ```
