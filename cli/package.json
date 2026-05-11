@@ -1,0 +1,31 @@
+{
+  "name": "solo-studio-cli",
+  "version": "0.1.0",
+  "description": "Install the Solo Studio AI methodology for any coding assistant",
+  "type": "module",
+  "bin": {
+    "solo-studio": "./dist/index.js"
+  },
+  "scripts": {
+    "prebuild": "node scripts/sync-assets.mjs",
+    "build": "tsc",
+    "dev": "node --loader ts-node/esm src/index.ts"
+  },
+  "files": [
+    "dist",
+    "assets"
+  ],
+  "keywords": [
+    "claude-code",
+    "cursor",
+    "copilot",
+    "ai",
+    "methodology",
+    "solo-studio"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^25.6.2",
+    "typescript": "^5.4.0"
+  }
+}
