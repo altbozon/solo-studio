@@ -53,6 +53,21 @@ Owner chat responsibilities:
 3. **Merge branches back to `main` as they land.** Nothing merges automatically. A branch is ready when its Notion discipline task is `Done`.
 4. When all discipline tasks Done and merged: bump `VERSION`, tag the sprint, close parent Notion task.
 
+**🔴 MANDATORY: surface worker prompts as verbatim code blocks.**
+When kicking off any worker (Wave 1, Wave 2, Wave 3, re-kicks, retries —
+every time), the Owner's chat response MUST contain the full worker prompt
+inside a fenced code block. Even if the prompt is already written in the
+EP kickoff doc, the Owner reproduces it verbatim in chat output.
+
+- DO output: a fenced code block with the complete prompt body.
+- DO NOT: point at the kickoff doc ("paste the Engineering prompt above").
+- DO NOT: summarize, paraphrase, or describe the prompt.
+- DO NOT: tell the user to scroll up or open another doc.
+
+The user must be able to copy each prompt with one click. Owner output
+that points at existing text is a hard failure — the user will reject it
+and the sprint stalls. This rule is non-negotiable.
+
 **Owner chat trigger phrase from EP/user:** `status check — merge anything that's ready`.
 
 **Kickoff prompt template:** `~/.claude/methodology/owner-kickoff-template.md` — copy, fill in `<N>` and scope list, paste into a new Claude Code session. Includes the Apple enrolment hard rule and the Definition of Done gate.
@@ -114,9 +129,12 @@ Each project shares the workspace's existing Tasks and Projects databases. Per p
 
 A feature task is **Done** when:
 1. Tests written (BDD `.feature` file via pytest-bdd, or XCTest, or whatever the project uses) and passing
-2. Committed with a Conventional Commit (`feat:` / `fix:` / `chore:` / `test:` / `refactor:`)
-3. **Notion task marked Done with Actual Cost filled in (days)** — mandatory, not optional
-4. No regressions in existing test suite
+2. Telemetry wired — every user-visible action, screen view, and lifecycle event has a call site. If no new events are needed, the Feature chat must say so explicitly and why.
+3. Committed with a Conventional Commit (`feat:` / `fix:` / `chore:` / `test:` / `refactor:`)
+4. **Notion task marked Done with Actual Cost filled in (days)** — mandatory, not optional
+5. No regressions in existing test suite
+
+**Telemetry, Localization, and Tests are non-negotiable.** Every Feature chat prompt must include `## Telemetry`, `## Localization`, and `## Tests` sections before the DoD. A feature that ships without them is not Done. See `ep-role.md → How to write a Feature chat prompt`.
 
 **Settings-toggle addendum.** When a feature task adds a user-visible Settings toggle:
 1. The runtime call site that reads the toggle is in scope — not just the UI and persistence layer.

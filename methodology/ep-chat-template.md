@@ -58,6 +58,32 @@ Do not produce a report. Do not restructure anything.
 3. On approval: create Notion sprint tasks, then produce the Owner
    prompt using owner-chat-template.md filled with project values
    from project memory.
+
+   **Pre-write all worker prompts inside the Owner kickoff.**
+   The Owner prompt must include a "Worker prompts" section at the
+   end — one pre-written short-format prompt per discipline, ready
+   to copy-paste into a new chat. Use the format from
+   owner-chat-template.md (Feature chat header, Notion URL, PREREQ,
+   Branch, Read, Scope, Do NOT, DoD). The Owner reads the kickoff
+   and executes — no guessing, no improvising prompt content.
+
+   Do NOT leave the worker prompts blank or as placeholders. If
+   a task scope is unclear, query Notion before writing the prompt.
+   A kickoff with empty worker prompts is incomplete.
+
+   **Tell the Owner explicitly to surface the prompts.** Include
+   this instruction near the wave kickoff steps:
+
+   > When kicking off a wave, output each worker prompt as a
+   > verbatim fenced code block in your response — even though
+   > they exist in this doc. Pointing at the doc ("paste the prompt
+   > from above") is wrong. The user must be able to copy each
+   > prompt with one click, no scrolling. This applies to every
+   > wave, every re-kick, every retry.
+
+   Without this instruction, Owners read the prompts in the kickoff
+   and assume the user can scroll to find them. The user can't —
+   they want copy-paste-ready blocks in chat output.
 ```
 
 ---

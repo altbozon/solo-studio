@@ -85,9 +85,23 @@ task independence and parallelisability>
    skeleton first if applicable. Each worker opens Claude Code 
    in its own worktree directory.
 
-   **When it's time to kick off a worker, generate the prompt as
-   your output — short, scannable, ready to copy-paste into a new
-   session.** Use this exact format:
+   **When it's time to kick off a worker, output the prompt as a
+   verbatim code block in your chat response — ready to copy-paste
+   into a new session.** This is non-negotiable, even if the EP
+   already pre-wrote the prompts in your kickoff doc:
+
+   - DO output: a fenced code block containing the full prompt body.
+   - DO NOT: point at the kickoff doc ("paste the prompt from above").
+   - DO NOT: summarize, paraphrase, or describe the prompt.
+   - DO NOT: omit the prompt because it's "already written."
+
+   The user should never have to scroll to find prompt text. Every
+   wave kickoff produces N code blocks (one per worker), each
+   self-contained and copy-pasteable. If the EP pre-wrote the
+   prompts, surface them verbatim — your job is to make them
+   one-click ready, not to acknowledge their existence.
+
+   Use this exact format for each prompt body:
 
    ```
    Feature chat: Sprint <N> — <Discipline> — <task name>
