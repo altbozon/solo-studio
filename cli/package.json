@@ -1,14 +1,14 @@
 {
   "name": "solo-studio-cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Install the Solo Studio AI methodology for any coding assistant",
   "type": "module",
   "bin": {
-    "solo-studio": "./dist/index.js"
+    "solo-studio": "dist/index.js"
   },
   "scripts": {
     "prebuild": "node scripts/sync-assets.mjs",
-    "build": "tsc",
+    "build": "tsc && chmod +x dist/index.js",
     "dev": "node --loader ts-node/esm src/index.ts"
   },
   "files": [
